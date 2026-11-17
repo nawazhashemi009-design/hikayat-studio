@@ -1,0 +1,111 @@
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a1128">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg"><title>حکایت استودیو</title>
+<style>
+:root{--bg:#0a1128;--p:#12151f;--p2:#1c2030;--g:#f5b942;--o:#e8812b;--ok:#3ecf8e;--er:#ff5d5d;--t:#eef0f6;--m:#9aa3b8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:16px Tahoma,Vazirmatn,sans-serif;padding:12px;max-width:760px;margin:auto}
+header{text-align:center;padding:14px 0}h1{margin:0;color:var(--g);font-size:26px;letter-spacing:1px}header small{color:var(--m)}
+nav{display:flex;gap:8px;overflow-x:auto;padding:6px 0}nav button,.tabs button{flex:none}
+.card{background:var(--p);border:1px solid #2a3047;border-radius:14px;padding:14px;margin:10px 0}
+button{background:var(--p2);color:var(--t);border:1px solid #333a55;border-radius:12px;padding:13px 16px;font:inherit;min-height:48px}
+button.on{background:var(--g);color:#1a1200;font-weight:bold}button.main{background:linear-gradient(135deg,var(--g),var(--o));color:#1a1200;font-weight:bold;width:100%;font-size:18px}
+textarea,select,input{width:100%;background:#0d1020;color:var(--t);border:1px solid #333a55;border-radius:10px;padding:12px;font:inherit}
+textarea#txt{min-height:240px}label{display:block;margin:10px 0 4px;color:var(--m);font-size:14px}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}
+.bar{height:10px;background:#0d1020;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--g);transition:.3s}
+#st{margin-top:8px;min-height:24px}.ok{color:var(--ok)}.er{color:var(--er)}audio{width:100%;margin-top:10px}.hide{display:none}h3{margin:0 0 6px;color:var(--g)}
+.proj{display:flex;gap:8px;align-items:center;border-top:1px solid #2a3047;padding:8px 0}.proj span{flex:1}
+</style></head><body>
+<header><h1>HIKAYAT STUDIO | حکایت استودیو</h1><small>«هر نوشته، یک صدای زنده»</small></header>
+<nav id="nav"><button data-v="studio" class="on">استودیو</button><button data-v="key">کلید Gemini</button><button data-v="arch">آرشیو</button></nav>
+
+<section id="studio">
+<div class="card"><h3>نوع استودیو</h3><div class="row tabs" id="tabs"></div></div>
+<div class="card"><label>متن</label><textarea id="txt" placeholder="متن فارسی یا دری خود را اینجا بنویسید..."></textarea>
+<small id="cnt" style="color:var(--m)"></small>
+<div class="row" style="margin-top:8px"><button id="copy">کپی</button><button id="clr">پاک کردن</button></div></div>
+<div class="card"><div class="row"><div><label>گوینده (فقط یک صدا)</label><select id="voice"></select></div>
+<div><label>لحن</label><select id="tone"></select></div></div>
+<label>دستور اختصاصی گویندگی</label><textarea id="custom" rows="3" placeholder="مثلاً: با صدای عمیق و باوقار، مانند راوی مستند تاریخی بخوان."></textarea>
+<label><input type="checkbox" id="auto" checked style="width:auto"> مکث‌گذاری هوشمند خودکار</label>
+<label>نشانه‌های گویندگی (در جای مکان‌نما اضافه می‌شوند)</label><div class="row">
+<button data-ins=" <short pause> ">مکث کوتاه</button><button data-ins=" <short pause> <short pause> ">مکث بلند</button><button data-ins=" <breath> ">نفس عمیق</button><button data-ins=" <sigh> ">آه</button><button data-ins=" <laugh> ">خنده</button><button data-ins=" <cough> ">سرفه</button></div>
+<label>سرعت پخش</label><div class="row" id="spd"></div>
+<label>نام فایل</label><input id="fname" value="Hikayat-Studio-Story-01"></div>
+<div class="card"><div class="row"><button class="main" id="go">تولید صدا</button></div>
+<div class="row" style="margin-top:8px"><button id="trial">تولید آزمایشی کوتاه</button><button id="cancel" class="hide">لغو</button></div>
+<div class="bar" style="margin-top:10px"><i id="pr"></i></div><div id="st"></div>
+<div id="out" class="hide"><audio id="au" controls></audio><div class="row" style="margin-top:8px"><button id="dl" class="main">دانلود WAV</button><button id="save">ذخیره در آرشیو</button></div><small id="dur" style="color:var(--m)"></small></div></div>
+</section>
+
+<section id="key" class="hide"><div class="card"><h3>تنظیم کلید خصوصی Gemini</h3>
+<p style="color:var(--m)">کلید را از <a style="color:var(--g)" href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a> بگیرید. اگر روی سرور خودتان متغیر GEMINI_API_KEY را تنظیم کرده‌اید، نیازی به وارد کردن کلید اینجا نیست.</p>
+<input id="ak" type="password" placeholder="AIza..." autocomplete="off">
+<div class="row" style="margin-top:8px"><button id="eye">نمایش/مخفی</button><button id="aks" class="on">ذخیره</button><button id="akt">آزمایش اتصال</button><button id="akd">حذف</button></div>
+<div id="aks2" style="margin-top:8px"></div>
+<p class="er" style="font-size:13px">هشدار: کلید ذخیره‌شده فقط در حافظهٔ همین مرورگر می‌ماند و امنیت کامل ندارد. برنامه را روی دستگاه مشترک استفاده نکنید و کلید را در جای عمومی منتشر نکنید.</p></div></section>
+
+<section id="arch" class="hide"><div class="card"><h3>آرشیو پروژه‌ها</h3><div id="plist"></div></div></section>
+
+<script>
+const $=id=>document.getElementById(id),S=JSON.parse(localStorage.getItem('hk_set')||'{}');
+const STUDIOS={story:['قصه‌گویی','Narrate as a deep, cinematic storyteller with natural pauses, emphasis on key sentences and consistent voice throughout.'],
+podcast:['پادکست','Speak as a warm, friendly single podcast host: natural, clear and conversational.'],
+news:['خبری','Read as a formal, authoritative news anchor: clear diction, balanced pace, no artificial excitement.'],
+doc:['مستند','Narrate as a serious documentary narrator: deep, measured, purposeful pauses, emphasis on key concepts.'],
+edu:['آموزشی','Speak as a clear teacher: easy pace for learning, precise pronunciation of terms.'],
+pray:['دعا و معنوی','Read in a calm, gentle, spiritual tone with longer pauses and tenderness.']};
+const TONES={'طبیعی':'natural','آرام':'calm','جدی':'serious','حماسی':'epic','رازآلود':'mysterious','غمگین':'sad','احساسی':'emotional','هیجان‌انگیز':'excited','رسمی':'formal','مستند سینمایی':'cinematic documentary','قصه‌گویانه':'storytelling','معنوی':'spiritual'};
+const VOICES={Kore:'قاطع',Charon:'آگاهی‌بخش، عمیق',Orus:'محکم',Fenrir:'پرشور',Puck:'سرزنده',Zephyr:'روشن',Leda:'جوان',Aoede:'سبک',Enceladus:'نفس‌دار',Algieba:'نرم',Gacrux:'بالغ',Sulafat:'گرم',Achird:'صمیمی',Iapetus:'واضح',Umbriel:'راحت',Schedar:'یکنواخت'};
+let studio=S.studio||'story',speed=S.speed||1,wav=null,ctl=null;
+$('tabs').innerHTML=Object.entries(STUDIOS).map(([k,v])=>`<button data-s="${k}">${v[0]}</button>`).join('');
+$('voice').innerHTML=Object.entries(VOICES).map(([k,v])=>`<option value="${k}">${k} — ${v}</option>`).join('');
+$('tone').innerHTML=Object.keys(TONES).map(k=>`<option>${k}</option>`).join('');
+$('spd').innerHTML=[.75,1,1.25,1.5].map(s=>`<button data-sp="${s}">${s}x</button>`).join('');
+$('voice').value=S.voice||'Kore';$('tone').value=S.tone||'طبیعی';$('custom').value=S.custom||'';$('txt').value=localStorage.getItem('hk_txt')||'';
+function mark(){document.querySelectorAll('[data-s]').forEach(b=>b.classList.toggle('on',b.dataset.s===studio));document.querySelectorAll('[data-sp]').forEach(b=>b.classList.toggle('on',+b.dataset.sp===speed));$('au').playbackRate=speed;}
+function persist(){localStorage.setItem('hk_set',JSON.stringify({studio,speed,voice:$('voice').value,tone:$('tone').value,custom:$('custom').value}));localStorage.setItem('hk_txt',$('txt').value);}
+function count(){const t=$('txt').value;$('cnt').textContent=`${t.trim()?t.trim().split(/\s+/).length:0} کلمه · ${t.length} حرف · ${t.split(/\n\s*\n/).filter(x=>x.trim()).length} پاراگراف`;}
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.v){['studio','key','arch'].forEach(v=>$(v).classList.toggle('hide',v!==b.dataset.v));document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x===b));if(b.dataset.v==='arch')plist();}
+ if(b.dataset.s){studio=b.dataset.s;persist();mark();}
+ if(b.dataset.sp){speed=+b.dataset.sp;persist();mark();}
+ if(b.dataset.ins!==undefined){const t=$('txt'),s=t.selectionStart;t.setRangeText(b.dataset.ins.replace(/\\n/g,'\n'),s,t.selectionEnd,'end');count();persist();}});
+['txt','custom','voice','tone'].forEach(i=>$(i).addEventListener('input',()=>{persist();count();}));
+$('clr').onclick=()=>{$('txt').value='';persist();count();};
+$('copy').onclick=()=>navigator.clipboard&&navigator.clipboard.writeText($('txt').value);
+const msg=(t,c)=>{$('st').innerHTML=`<span class="${c||''}">${t}</span>`};
+const ERR={no_key:'کلید API وارد نشده است. به بخش «کلید Gemini» بروید.',bad_key:'کلید API نامعتبر است یا اجازهٔ دسترسی ندارد.',quota:'سهمیه یا محدودیت درخواست تمام شده است. کمی بعد دوباره تلاش کنید.',network:'ارتباط اینترنت یا سرور قطع است.',too_long:'متن بیش از حد مجاز است.',no_audio:'مدل فایل صوتی برنگرداند. دوباره تلاش کنید.',api_error:'خطای مدل Gemini.',bad_request:'درخواست نامعتبر.'};
+function pauses(t){ // Gemini 3.8 TTS: inline tags are interpreted, not read aloud
+ const P=' <short pause> ';
+ return t.replace(/\r/g,'').replace(/([.!؟?۔])[ \t]+/g,(m,p)=>p+P+((p==='!'||p==='؟'||p==='?')&&studio==='story'?'<breath> ':'')).replace(/\n\s*\n/g,P+'<short pause>\n\n');}
+function chunks(t,max=1400){const out=[];let cur='';for(const s of t.split(/(?<=[.!؟?۔…]\s|\n)/)){if((cur+s).length>max&&cur){out.push(cur.trim());cur='';}cur+=s;}if(cur.trim())out.push(cur.trim());return out;}
+function style(){const c=$('custom').value.trim();return `Persian (Farsi/Dari), single narrator. ${STUDIOS[studio][1]} Tone: ${TONES[$('tone').value]}.${c?' '+c:''}`;}
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+function toWav(pcm){const h=new DataView(new ArrayBuffer(44)),w=(o,s)=>[...s].forEach((c,i)=>h.setUint8(o+i,c.charCodeAt(0)));
+ w(0,'RIFF');h.setUint32(4,36+pcm.length,true);w(8,'WAVEfmt ');h.setUint32(16,16,true);h.setUint16(20,1,true);h.setUint16(22,1,true);h.setUint32(24,24000,true);h.setUint32(28,48000,true);h.setUint16(32,2,true);h.setUint16(34,16,true);w(36,'data');h.setUint32(40,pcm.length,true);
+ return new Blob([h.buffer,pcm],{type:'audio/wav'});}
+async function call(text,sig){const r=await fetch('/api/tts',{method:'POST',signal:sig,headers:{'Content-Type':'application/json','x-api-key':localStorage.getItem('hk_key')||''},body:JSON.stringify({text,style:style(),voice:$('voice').value})});
+ const j=await r.json().catch(()=>({}));if(!r.ok||!j.pcm){const e=new Error(ERR[j.error]||'خطای ناشناخته');throw e;}return b64(j.pcm);}
+async function gen(trial){let t=$('txt').value.trim();if(!t)return msg('ابتدا متن را وارد کنید.','er');
+ if($('auto').checked)t=pauses(t);let parts=chunks(t);if(trial)parts=[parts[0].slice(0,180)];
+ ctl=new AbortController();$('cancel').classList.remove('hide');$('go').disabled=$('trial').disabled=true;$('out').classList.add('hide');$('pr').style.width='0';
+ const pcms=[];try{for(let i=0;i<parts.length;i++){msg(`در حال تولید بخش ${i+1} از ${parts.length}...`);pcms.push(await call(parts[i],ctl.signal));$('pr').style.width=((i+1)/parts.length*100)+'%';}
+  const n=pcms.reduce((a,p)=>a+p.length,0),all=new Uint8Array(n);let o=0;pcms.forEach(p=>{all.set(p,o);o+=p.length;});
+  wav=toWav(all);$('au').src=URL.createObjectURL(wav);$('au').playbackRate=speed;$('out').classList.remove('hide');$('dur').textContent='مدت: '+(n/48000).toFixed(1)+' ثانیه';msg('صدا با موفقیت از Gemini دریافت شد.','ok');}
+ catch(e){msg(e.name==='AbortError'?'تولید لغو شد.':e.message,'er');}
+ $('cancel').classList.add('hide');$('go').disabled=$('trial').disabled=false;}
+$('go').onclick=()=>gen(false);$('trial').onclick=()=>gen(true);$('cancel').onclick=()=>ctl&&ctl.abort();
+$('dl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(wav);a.download=($('fname').value||'Hikayat-Studio')+'.wav';a.click();};
+// key page
+$('ak').value=localStorage.getItem('hk_key')||'';$('eye').onclick=()=>$('ak').type=$('ak').type==='password'?'text':'password';
+$('aks').onclick=()=>{localStorage.setItem('hk_key',$('ak').value.trim());$('aks2').innerHTML='<span class="ok">ذخیره شد.</span>';};
+$('akd').onclick=()=>{localStorage.removeItem('hk_key');$('ak').value='';$('aks2').textContent='کلید حذف شد.';};
+$('akt').onclick=async()=>{localStorage.setItem('hk_key',$('ak').value.trim());$('aks2').textContent='در حال آزمایش...';try{await call('سلام',null);$('aks2').innerHTML='<span class="ok">اتصال موفق بود.</span>';}catch(e){$('aks2').innerHTML=`<span class="er">${e.message}</span>`;}};
+// archive (text and settings only; audio is not stored)
+const P=()=>JSON.parse(localStorage.getItem('hk_p')||'[]');
+$('save').onclick=()=>{const n=prompt('نام پروژه:',$('fname').value);if(!n)return;const p=P();p.unshift({n,t:$('txt').value,v:$('voice').value,tone:$('tone').value,c:$('custom').value,s:studio});localStorage.setItem('hk_p',JSON.stringify(p));};
+function plist(){const p=P();$('plist').innerHTML=p.length?p.map((x,i)=>`<div class="proj"><span>${x.n}</span><button onclick="openP(${i})">باز کردن</button><button onclick="delP(${i})">حذف</button></div>`).join(''):'<small>پروژه‌ای ذخیره نشده است.</small>';}
+window.openP=i=>{const x=P()[i];$('txt').value=x.t;$('voice').value=x.v;$('tone').value=x.tone;$('custom').value=x.c;studio=x.s;persist();mark();count();document.querySelector('[data-v=studio]').click();};
+window.delP=i=>{const p=P();p.splice(i,1);localStorage.setItem('hk_p',JSON.stringify(p));plist();};
+mark();count();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
+</script></body></html>
