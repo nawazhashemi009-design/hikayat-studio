@@ -38,7 +38,7 @@ textarea#txt{min-height:240px}label{display:block;margin:10px 0 4px;color:var(--
 </section>
 
 <section id="key" class="hide"><div class="card"><h3>تنظیم کلید خصوصی Gemini</h3>
-<p style="color:var(--m)">کلید را از <a style="color:var(--g)" href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a> بگیرید. اگر روی سرور خودتان متغیر GEMINI_API_KEY را تنظیم کرده‌اید، نیازی به وارد کردن کلید اینجا نیست.</p>
+<p style="color:var(--m)">کلید را از <a style="color:var(--g)" href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a> بگیرید. کلید فقط روی همین گوشی ذخیره می‌شود و فقط به خود گوگل فرستاده می‌شود.</p>
 <input id="ak" type="password" placeholder="AIza..." autocomplete="off">
 <div class="row" style="margin-top:8px"><button id="eye">نمایش/مخفی</button><button id="aks" class="on">ذخیره</button><button id="akt">آزمایش اتصال</button><button id="akd">حذف</button></div>
 <div id="aks2" style="margin-top:8px"></div>
@@ -84,8 +84,11 @@ const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 function toWav(pcm){const h=new DataView(new ArrayBuffer(44)),w=(o,s)=>[...s].forEach((c,i)=>h.setUint8(o+i,c.charCodeAt(0)));
  w(0,'RIFF');h.setUint32(4,36+pcm.length,true);w(8,'WAVEfmt ');h.setUint32(16,16,true);h.setUint16(20,1,true);h.setUint16(22,1,true);h.setUint32(24,24000,true);h.setUint32(28,48000,true);h.setUint16(32,2,true);h.setUint16(34,16,true);w(36,'data');h.setUint32(40,pcm.length,true);
  return new Blob([h.buffer,pcm],{type:'audio/wav'});}
-async function call(text,sig){const r=await fetch('/api/tts',{method:'POST',signal:sig,headers:{'Content-Type':'application/json','x-api-key':localStorage.getItem('hk_key')||''},body:JSON.stringify({text,style:style(),voice:$('voice').value})});
- const j=await r.json().catch(()=>({}));if(!r.ok||!j.pcm){const e=new Error(ERR[j.error]||'خطای ناشناخته');throw e;}return b64(j.pcm);}
+async function call(text,sig){const key=localStorage.getItem('hk_key')||'';if(!key)throw new Error(ERR.no_key);
+ let r;try{r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash-tts:generateContent',{method:'POST',signal:sig,headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({contents:[{role:'user',parts:[{text,speech_metadata:{style:style()}}]}],generationConfig:{responseModalities:['AUDIO'],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:$('voice').value}}}}})})}catch(e){if(e.name==='AbortError')throw e;throw new Error(ERR.network)}
+ const j=await r.json().catch(()=>({}));
+ if(!r.ok){const m=(j.error&&j.error.message)||'';throw new Error(r.status===429?ERR.quota:(r.status===403||r.status===401||/API key/i.test(m))?ERR.bad_key:ERR.api_error+(m?' ('+m.slice(0,120)+')':''));}
+ const p=j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts;const a=p&&p.find(x=>x.inlineData);if(!a)throw new Error(ERR.no_audio);return b64(a.inlineData.data);}
 async function gen(trial){let t=$('txt').value.trim();if(!t)return msg('ابتدا متن را وارد کنید.','er');
  if($('auto').checked)t=pauses(t);let parts=chunks(t);if(trial)parts=[parts[0].slice(0,180)];
  ctl=new AbortController();$('cancel').classList.remove('hide');$('go').disabled=$('trial').disabled=true;$('out').classList.add('hide');$('pr').style.width='0';
