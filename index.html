@@ -9,33 +9,55 @@ nav{display:flex;gap:8px;overflow-x:auto;padding:6px 0}nav button,.tabs button{f
 .card{background:var(--p);border:1px solid #2a3047;border-radius:14px;padding:14px;margin:10px 0}
 button{background:var(--p2);color:var(--t);border:1px solid #333a55;border-radius:12px;padding:13px 16px;font:inherit;min-height:48px}
 button.on{background:var(--g);color:#1a1200;font-weight:bold}button.main{background:linear-gradient(135deg,var(--g),var(--o));color:#1a1200;font-weight:bold;width:100%;font-size:18px}
+button.sm{min-height:38px;padding:8px 12px;font-size:14px}
 textarea,select,input{width:100%;background:#0d1020;color:var(--t);border:1px solid #333a55;border-radius:10px;padding:12px;font:inherit}
 textarea#txt{min-height:240px}label{display:block;margin:10px 0 4px;color:var(--m);font-size:14px}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}
 .bar{height:10px;background:#0d1020;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--g);transition:.3s}
 #st{margin-top:8px;min-height:24px}.ok{color:var(--ok)}.er{color:var(--er)}audio{width:100%;margin-top:10px}.hide{display:none}h3{margin:0 0 6px;color:var(--g)}
 .proj{display:flex;gap:8px;align-items:center;border-top:1px solid #2a3047;padding:8px 0}.proj span{flex:1}
-</style></head><body>
+.hint{color:var(--m);font-size:13px;margin:4px 0}
+#cbox{max-height:55vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px 0}
+.msg{padding:10px 12px;border-radius:12px;white-space:pre-wrap;line-height:1.8;max-width:92%}.msg.user{background:var(--p2);align-self:flex-start}.msg.model{background:#0d1020;border:1px solid #2a3047;align-self:flex-end}
+nav{position:sticky;top:0;background:var(--bg);z-index:5}#wf{width:100%;height:70px;background:#0d1020;border-radius:10px;cursor:pointer;display:block}</style></head><body>
 <header><h1>HIKAYAT STUDIO | حکایت استودیو</h1><small>«هر نوشته، یک صدای زنده»</small></header>
-<nav id="nav"><button data-v="studio" class="on">استودیو</button><button data-v="key">کلید Gemini</button><button data-v="arch">آرشیو</button></nav>
+<nav id="nav"><button data-v="studio" class="on">استودیو</button><button data-v="chat">داستان‌سرا (چت)</button><button data-v="key">کلید Gemini</button><button data-v="arch">آرشیو</button></nav>
 
 <section id="studio">
 <div class="card"><h3>نوع استودیو</h3><div class="row tabs" id="tabs"></div></div>
-<div class="card"><label>متن</label><textarea id="txt" placeholder="متن فارسی یا دری خود را اینجا بنویسید..."></textarea>
+<div class="card"><h3>قالب روایت</h3><div class="hint">با یک لمس، گوینده، لحن و دستور گویندگی برای آن ژانر تنظیم می‌شود.</div><div class="row tabs" id="tpl"></div></div>
+<div class="card"><label>متن (برای چند گوینده بنویسید: نام: دیالوگ)</label><textarea id="txt" placeholder="متن فارسی یا دری خود را اینجا بنویسید..."></textarea>
 <small id="cnt" style="color:var(--m)"></small>
-<div class="row" style="margin-top:8px"><button id="copy">کپی</button><button id="clr">پاک کردن</button></div></div>
-<div class="card"><div class="row"><div><label>گوینده (فقط یک صدا)</label><select id="voice"></select></div>
+<div class="row" style="margin-top:8px"><button id="copy">کپی</button><button id="clr">پاک کردن</button></div>
+<div class="row" style="margin-top:8px"><button id="aitag" class="on">تگ‌گذاری هوشمند (Gemini)</button><button id="undo" class="hide">بازگردانی</button></div><div id="tagst" class="hint"></div></div>
+<div class="card"><div class="row"><div><label>گوینده اصلی / راوی</label><select id="voice"></select></div>
 <div><label>لحن</label><select id="tone"></select></div></div>
+<div id="vdesc" class="hint"></div><button id="vprev" class="sm">پیش‌شنود صدا</button>
 <label>دستور اختصاصی گویندگی</label><textarea id="custom" rows="3" placeholder="مثلاً: با صدای عمیق و باوقار، مانند راوی مستند تاریخی بخوان."></textarea>
-<label><input type="checkbox" id="auto" checked style="width:auto"> مکث‌گذاری هوشمند خودکار</label>
+<label><input type="checkbox" id="auto" style="width:auto"> مکث‌گذاری خودکار (اختیاری؛ پیش‌فرض خاموش)</label>
 <label>نشانه‌های گویندگی (در جای مکان‌نما اضافه می‌شوند)</label><div class="row">
-<button data-ins=" <short pause> ">مکث کوتاه</button><button data-ins=" <short pause> <short pause> ">مکث بلند</button><button data-ins=" <breath> ">نفس عمیق</button><button data-ins=" <sigh> ">آه</button><button data-ins=" <laugh> ">خنده</button><button data-ins=" <cough> ">سرفه</button></div>
+<button data-ins=" <short pause> ">مکث کوتاه</button><button data-ins=" <medium pause> ">مکث متوسط</button><button data-ins=" <long pause> ">مکث بلند</button><button data-ins=" <gasp> ">نفس‌نفس / تعجب</button><button data-ins=" <chuckles> ">خندهٔ ملایم</button><button data-ins=" <throat-clearing> ">صاف کردن گلو</button><button data-ins=" <breath> ">نفس عمیق</button><button data-ins=" <sigh> ">آه</button><button data-ins=" <laugh> ">خنده</button><button data-ins=" <cough> ">سرفه</button></div>
 <label>سرعت پخش</label><div class="row" id="spd"></div>
+<label>خلاقیت و انعطاف حسی (Temperature): <b id="tv">1</b></label><input type="range" id="temp" min="0" max="2" step="0.05" value="1"><div class="hint" id="tdesc"></div>
 <label>نام فایل</label><input id="fname" value="Hikayat-Studio-Story-01"></div>
+<div class="card"><h3>شخصیت‌ها (چند گوینده)</h3><div class="hint">برای هر شخصیت نام، صدا و لحن بگذارید. خطی که با «نام:» شروع شود با صدای همان شخصیت خوانده می‌شود؛ بقیهٔ خطوط با گوینده اصلی.</div>
+<div id="cast"></div><button id="addc" class="sm">+ افزودن شخصیت</button></div>
+<div class="card"><h3>موسیقی و افکت</h3><div class="hint">موسیقی زمینه هنگام صحبت خودکار کم می‌شود. افکت‌ها را در جای مکان‌نما درج کنید؛ هر کدام در همان نقطهٔ روایت پخش می‌شود. همه‌چیز داخل خود برنامه ساخته می‌شود و حق کپی ندارد.</div>
+<div class="row"><div><label>موسیقی / فضای زمینه</label><select id="bed"><option value="">بدون موسیقی</option><option value="rain">باران</option><option value="wind">باد</option><option value="fire">آتش</option><option value="horror">درون‌مایه ترسناک</option><option value="calm">آرام و شبانه</option><option value="emo">احساسی</option><option value="epic">حماسی</option><option value="hk">موزیک حکایت‌سرا (داخلی)</option><option value="mine">فایل خودم</option></select></div>
+<div><label>بلندی موسیقی</label><input type="range" id="bvol" min="0" max="100" value="35"></div></div>
+<div class="row" style="margin-top:8px"><button id="mup" class="sm">بارگذاری موسیقی خودم</button><input type="file" id="mf" accept="audio/*" class="hide"><small id="mname" class="hint"></small></div>
+<label>افکت‌ها</label><div class="row" id="fxb"></div><label>بلندی افکت‌ها</label><input type="range" id="fvol" min="0" max="100" value="60"></div>
 <div class="card"><div class="row"><button class="main" id="go">تولید صدا</button></div>
 <div class="row" style="margin-top:8px"><button id="trial">تولید آزمایشی کوتاه</button><button id="cancel" class="hide">لغو</button></div>
 <div class="bar" style="margin-top:10px"><i id="pr"></i></div><div id="st"></div>
-<div id="out" class="hide"><audio id="au" controls></audio><div class="row" style="margin-top:8px"><button id="dl" class="main">دانلود WAV</button><button id="save">ذخیره در آرشیو</button></div><small id="dur" style="color:var(--m)"></small></div></div>
+<div id="out" class="hide"><canvas id="wf"></canvas><audio id="au" controls></audio><div class="row" style="margin-top:8px"><button id="dl" class="main">دانلود WAV</button><button id="save">ذخیره در آرشیو</button></div><small id="dur" style="color:var(--m)"></small></div></div>
 </section>
+
+<section id="chat" class="hide"><div class="card"><h3>دستیار داستان‌سرا</h3>
+<div class="hint">برای نوشتن داستان، ایدهٔ قسمت، عنوان و توضیح کانال. نیازمند کلید Gemini.</div>
+<div class="row tabs" id="qk"></div>
+<div id="cbox"></div>
+<textarea id="cin" rows="3" placeholder="پیام خود را بنویسید..."></textarea>
+<div class="row" style="margin-top:8px"><button id="csend" class="main">ارسال</button><button id="cclr">پاک کردن گفتگو</button></div><div id="cst" class="hint"></div></div></section>
 
 <section id="key" class="hide"><div class="card"><h3>تنظیم کلید خصوصی Gemini</h3>
 <p style="color:var(--m)">کلید را از <a style="color:var(--g)" href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a> بگیرید. کلید فقط روی همین گوشی ذخیره می‌شود و فقط به خود گوگل فرستاده می‌شود.</p>
@@ -44,71 +66,196 @@ textarea#txt{min-height:240px}label{display:block;margin:10px 0 4px;color:var(--
 <div id="aks2" style="margin-top:8px"></div>
 <p class="er" style="font-size:13px">هشدار: کلید ذخیره‌شده فقط در حافظهٔ همین مرورگر می‌ماند و امنیت کامل ندارد. برنامه را روی دستگاه مشترک استفاده نکنید و کلید را در جای عمومی منتشر نکنید.</p></div></section>
 
-<section id="arch" class="hide"><div class="card"><h3>آرشیو پروژه‌ها</h3><div id="plist"></div></div></section>
+<section id="arch" class="hide"><div class="card"><h3>آرشیو پروژه‌ها</h3><div id="plist"></div></div>
+<div class="card"><h3>پشتیبان‌گیری</h3><div class="hint">پروژه‌ها، تنظیمات، شخصیت‌ها و گفتگو را به فایل ببرید و در گوشی دیگر بازیابی کنید. کلید API در فایل نمی‌آید.</div>
+<div class="row"><button id="bex">دریافت پشتیبان</button><button id="bim">بازیابی از فایل</button></div><input type="file" id="bf" accept=".json" class="hide"><div id="bst" class="hint"></div></div></section>
 
 <script>
 const $=id=>document.getElementById(id),S=JSON.parse(localStorage.getItem('hk_set')||'{}');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const STUDIOS={story:['قصه‌گویی','Narrate as a deep, cinematic storyteller with natural pauses, emphasis on key sentences and consistent voice throughout.'],
 podcast:['پادکست','Speak as a warm, friendly single podcast host: natural, clear and conversational.'],
 news:['خبری','Read as a formal, authoritative news anchor: clear diction, balanced pace, no artificial excitement.'],
 doc:['مستند','Narrate as a serious documentary narrator: deep, measured, purposeful pauses, emphasis on key concepts.'],
 edu:['آموزشی','Speak as a clear teacher: easy pace for learning, precise pronunciation of terms.'],
 pray:['دعا و معنوی','Read in a calm, gentle, spiritual tone with longer pauses and tenderness.']};
-const TONES={'طبیعی':'natural','آرام':'calm','جدی':'serious','حماسی':'epic','رازآلود':'mysterious','غمگین':'sad','احساسی':'emotional','هیجان‌انگیز':'excited','رسمی':'formal','مستند سینمایی':'cinematic documentary','قصه‌گویانه':'storytelling','معنوی':'spiritual'};
+const TONES={'طبیعی':'natural','آرام':'calm','جدی':'serious','حماسی':'epic','رازآلود':'mysterious','غمگین':'sad','احساسی':'emotional','هیجان‌انگیز':'excited','رسمی':'formal','مستند سینمایی':'cinematic documentary','قصه‌گویانه':'storytelling','معنوی':'spiritual','ترسناک':'dark, dreadful, hushed'};
 const VOICES={Kore:'قاطع',Charon:'آگاهی‌بخش، عمیق',Orus:'محکم',Fenrir:'پرشور',Puck:'سرزنده',Zephyr:'روشن',Leda:'جوان',Aoede:'سبک',Enceladus:'نفس‌دار',Algieba:'نرم',Gacrux:'بالغ',Sulafat:'گرم',Achird:'صمیمی',Iapetus:'واضح',Umbriel:'راحت',Schedar:'یکنواخت'};
-let studio=S.studio||'story',speed=S.speed||1,wav=null,ctl=null;
+const VG={'⭐ منتخب حکایت‌سرا':{Riko:'راوی اصلی · عمیق و مطمئن (ترسناک، حماسی)',Rami:'گرم و گوش‌نواز · بم (قصهٔ شبانه، گفتگو)',Neno:'عمیق و مخملی (شبانه و آرام)',Enzo:'تیز و مشتاق (معمایی و هیجانی)',Zali:'گرم و همدلانه · زن (احساسی و عاشقانه)'},'قصه‌گو':{Enzo:'تیز و مشتاق · بم',Riko:'مطمئن و واضح · خیلی بم',Sami:'خونسرد و مطمئن · بم',Zali:'گرم و همدلانه · متوسط (زن)'},
+'پادکست':{Brio:'آرام و صمیمی · نیمه‌بم',Jori:'گرم و دوستانه · نیمه‌بم',Rami:'گرم و دوستانه · بم',Alnilam:'استوار و محکم · نیمه‌بم'},
+'آموزش (Tutor)':{Bodi:'آرام و صمیمی · بم',Lumi:'گرم و دوستانه · بم',Sola:'ملایم و راحت · خیلی زیر'},
+'تبلیغاتی':{Koda:'مستقیم و کمک‌کننده · نیمه‌بم',Nika:'گرم و دوستانه · متوسط',Tavi:'آرام و صمیمی · نیمه‌زیر'},
+'آموزشی (Instructional)':{Kira:'خونسرد و مطمئن · متوسط',Ludo:'مطمئن و واضح · بم',Mako:'پرانرژی و رنگارنگ · بم'},
+'دستیار دیجیتال':{Gero:'واضح و دوستانه · بم',Neno:'عمیق و مخملی · خیلی بم',Olin:'سبک و دقیق · بم'},
+'مرکز تماس':{Daro:'مطمئن و واضح · بم',Fola:'واضح و دوستانه · متوسط',Hali:'—'},'Gemini پایه':VOICES};
+const vopts=()=>Object.entries(VG).map(([g,o])=>`<optgroup label="${g}">`+Object.entries(o).map(([k,v])=>`<option value="${k}">${k} — ${v}</option>`).join('')+'</optgroup>').join('');
+const topts=Object.keys(TONES).map(k=>`<option>${k}</option>`).join('');
+// genre templates: [label, tone, voice, speed, instruction, script skeleton]
+const TPL={horror:['ترسناک','ترسناک','Riko',.9,'Narrate a horror story in a low, hushed, slow voice. Build dread gradually, whisper at tense moments, leave long silences before scares, never rush.','شب بود و باد می‌وزید... <short pause> <short pause>\nراوی: هیچ‌کس نمی‌دانست آن صدا از کجا می‌آید. <breath>'],
+emo:['احساسی','احساسی','Lumi',1,'Warm, tender and heartfelt. Let the voice soften and tremble slightly at emotional peaks, with brief catches of breath.','راوی: یادم هست آن روز... <sigh> <short pause>'],
+night:['شبانه و آرام','آرام','Neno',.9,'Slow, soothing bedtime narration. Soft, steady and velvety, with long gentle pauses between sentences.','راوی: چشم‌هایت را ببند... <breath> <short pause> و گوش بده.'],
+mys:['معمایی','رازآلود','Enzo',1,'Suspenseful noir narrator. Clipped sentences, meaningful pauses, voice lowered when revealing clues.','راوی: سه نفر در اتاق بودند. <short pause> یکی دروغ می‌گفت.'],
+rom:['عاشقانه','احساسی','Nika',.95,'Intimate, warm and romantic. Slow, delicate delivery with smiling softness.','راوی: نگاهش کرد... <short pause> و دنیا ایستاد.'],
+epic:['حماسی','حماسی','Sami',1,'Epic and heroic. Powerful, rising intensity, strong emphasis on names and battles.','راوی: در سرزمینی دور، <short pause> قهرمانی برخاست.']};
+const CHATQ={'ایدهٔ قسمت':'۵ ایدهٔ جذاب برای قسمت‌های بعدی کانال داستان شبانه پیشنهاد بده.','داستان ترسناک':'یک داستان ترسناک کوتاه (حدود ۳ دقیقه روایت) بنویس.','داستان احساسی':'یک داستان احساسی و تأثیرگذار کوتاه بنویس.','عنوان و توضیح':'برای آخرین داستان، ۵ عنوان جذاب و یک توضیح کوتاه برای انتشار در کانال بنویس.','آماده‌سازی روایت':'آخرین داستان را برای روایت صوتی آماده کن: قالب «راوی:» و «نام شخصیت:» و تگ‌های مکث و نفس.'};
+let studio=S.studio||'story',speed=S.speed||1,wav=null,ctl=null,cast=S.cast||[],chat=JSON.parse(localStorage.getItem('hk_chat')||'[]');
 $('tabs').innerHTML=Object.entries(STUDIOS).map(([k,v])=>`<button data-s="${k}">${v[0]}</button>`).join('');
-$('voice').innerHTML=Object.entries(VOICES).map(([k,v])=>`<option value="${k}">${k} — ${v}</option>`).join('');
-$('tone').innerHTML=Object.keys(TONES).map(k=>`<option>${k}</option>`).join('');
+$('tpl').innerHTML=Object.entries(TPL).map(([k,v])=>`<button data-t="${k}">${v[0]}</button>`).join('');
+$('qk').innerHTML=Object.keys(CHATQ).map(k=>`<button class="sm" data-q="${k}">${k}</button>`).join('');
+$('voice').innerHTML=vopts();$('tone').innerHTML=topts;
 $('spd').innerHTML=[.75,1,1.25,1.5].map(s=>`<button data-sp="${s}">${s}x</button>`).join('');
-$('voice').value=S.voice||'Kore';$('tone').value=S.tone||'طبیعی';$('custom').value=S.custom||'';$('txt').value=localStorage.getItem('hk_txt')||'';
+$('voice').value=S.voice||'Riko';$('tone').value=S.tone||'طبیعی';$('custom').value=S.custom||'';$('txt').value=localStorage.getItem('hk_txt')||'';
 function mark(){document.querySelectorAll('[data-s]').forEach(b=>b.classList.toggle('on',b.dataset.s===studio));document.querySelectorAll('[data-sp]').forEach(b=>b.classList.toggle('on',+b.dataset.sp===speed));$('au').playbackRate=speed;}
-function persist(){localStorage.setItem('hk_set',JSON.stringify({studio,speed,voice:$('voice').value,tone:$('tone').value,custom:$('custom').value}));localStorage.setItem('hk_txt',$('txt').value);}
-function count(){const t=$('txt').value;$('cnt').textContent=`${t.trim()?t.trim().split(/\s+/).length:0} کلمه · ${t.length} حرف · ${t.split(/\n\s*\n/).filter(x=>x.trim()).length} پاراگراف`;}
+function persist(){localStorage.setItem('hk_set',JSON.stringify({studio,speed,cast,auto:$('auto').checked,temp:$('temp').value,bed:$('bed').value,bv:$('bvol').value,fv:$('fvol').value,voice:$('voice').value,tone:$('tone').value,custom:$('custom').value}));localStorage.setItem('hk_txt',$('txt').value);}
+function count(){const t=$('txt').value;$('cnt').textContent=`${t.trim()?t.trim().split(/\s+/).length:0} کلمه · ${t.length} حرف · ${t.split(/\n\s*\n/).filter(x=>x.trim()).length} پاراگراف · ~${Math.ceil(t.length/3.5)} توکن`;}
+function rc(){$('cast').innerHTML=cast.map((c,i)=>`<div class="row" style="margin:6px 0"><input data-ci="${i}" data-k="n" value="${esc(c.n)}" placeholder="نام شخصیت"><select data-ci="${i}" data-k="v">${vopts()}</select><select data-ci="${i}" data-k="t">${topts}</select><button class="sm" data-cd="${i}" style="flex:0">✕</button></div>`).join('');
+ document.querySelectorAll('#cast select').forEach(s=>s.value=cast[s.dataset.ci][s.dataset.k]);}
+$('cast').addEventListener('input',e=>{const t=e.target;if(t.dataset.ci!==undefined){cast[t.dataset.ci][t.dataset.k]=t.value;persist();}});
+$('addc').onclick=()=>{cast.push({n:'',v:'Enzo',t:'طبیعی'});rc();persist();};
+function applyTpl(k){const t=TPL[k];studio='story';$('tone').value=t[1];$('voice').value=t[2];speed=t[3];$('custom').value=t[4];$('bed').value=BEDT[k]||'';vd();persist();mark();count();}
+const VIEWS=['studio','chat','key','arch'];
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
- if(b.dataset.v){['studio','key','arch'].forEach(v=>$(v).classList.toggle('hide',v!==b.dataset.v));document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x===b));if(b.dataset.v==='arch')plist();}
+ if(b.dataset.v){VIEWS.forEach(v=>$(v).classList.toggle('hide',v!==b.dataset.v));document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x===b));if(b.dataset.v==='arch')plist();if(b.dataset.v==='chat')rchat();}
  if(b.dataset.s){studio=b.dataset.s;persist();mark();}
+ if(b.dataset.t)applyTpl(b.dataset.t);
+ if(b.dataset.cd!==undefined){cast.splice(+b.dataset.cd,1);rc();persist();}
+ if(b.dataset.q){$('cin').value=CHATQ[b.dataset.q];send();}
+ if(b.dataset.ts!==undefined){$('txt').value=chat[+b.dataset.ts].parts[0].text;persist();count();document.querySelector('[data-v=studio]').click();}
  if(b.dataset.sp){speed=+b.dataset.sp;persist();mark();}
  if(b.dataset.ins!==undefined){const t=$('txt'),s=t.selectionStart;t.setRangeText(b.dataset.ins.replace(/\\n/g,'\n'),s,t.selectionEnd,'end');count();persist();}});
 ['txt','custom','voice','tone'].forEach(i=>$(i).addEventListener('input',()=>{persist();count();}));
 $('clr').onclick=()=>{$('txt').value='';persist();count();};
 $('copy').onclick=()=>navigator.clipboard&&navigator.clipboard.writeText($('txt').value);
 const msg=(t,c)=>{$('st').innerHTML=`<span class="${c||''}">${t}</span>`};
-const ERR={no_key:'کلید API وارد نشده است. به بخش «کلید Gemini» بروید.',bad_key:'کلید API نامعتبر است یا اجازهٔ دسترسی ندارد.',quota:'سهمیه یا محدودیت درخواست تمام شده است. کمی بعد دوباره تلاش کنید.',network:'ارتباط اینترنت یا سرور قطع است.',too_long:'متن بیش از حد مجاز است.',no_audio:'مدل فایل صوتی برنگرداند. دوباره تلاش کنید.',api_error:'خطای مدل Gemini.',bad_request:'درخواست نامعتبر.'};
-function pauses(t){ // Gemini 3.8 TTS: inline tags are interpreted, not read aloud
- const P=' <short pause> ';
+const ERR={no_key:'کلید API وارد نشده است. به بخش «کلید Gemini» بروید.',bad_key:'کلید API نامعتبر است یا اجازهٔ دسترسی ندارد.',quota:'سهمیه یا محدودیت درخواست تمام شده است. کمی بعد دوباره تلاش کنید.',network:'ارتباط اینترنت یا سرور قطع است.',no_audio:'مدل فایل صوتی برنگرداند. دوباره تلاش کنید.',api_error:'خطای مدل Gemini.'};
+const errOf=(s,m)=>s===429?ERR.quota:(s===403||s===401||/API key/i.test(m))?ERR.bad_key:ERR.api_error+(m?' ('+m.slice(0,120)+')':'');
+const KEY=()=>{const k=localStorage.getItem('hk_key')||'';if(!k)throw new Error(ERR.no_key);return k;};
+const API='https://generativelanguage.googleapis.com/v1beta/models/';
+// text model helper (tagging + chat)
+async function tg(contents,sys){const key=KEY();let r;try{r=await fetch(API+'gemini-2.5-flash:generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({contents,systemInstruction:{parts:[{text:sys}]}})})}catch(e){throw new Error(ERR.network)}
+ const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(errOf(r.status,(j.error&&j.error.message)||''));
+ const p=j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts;if(!p)throw new Error('پاسخی دریافت نشد.');return p.map(x=>x.text||'').join('');}
+$('aitag').onclick=async()=>{const t=$('txt').value.trim();if(!t)return;$('tagst').textContent='در حال تگ‌گذاری...';$('aitag').disabled=true;
+ try{const r=await tg([{role:'user',parts:[{text:t}]}],'You prepare Persian narration scripts for text-to-speech. Insert natural performance tags into the text: <short pause>, <medium pause>, <long pause> for dramatic silence, <breath>, <sigh>, <laugh>, <chuckles>, <gasp>, <cough>, <throat-clearing>, where a skilled narrator would use them (emotional peaks, tension, scene changes, before reveals). Do not change, add or remove any words, and keep lines like "Name: dialogue" exactly as they are. Return only the tagged text, without explanations or code fences.');
+  $('undo').dataset.prev=$('txt').value;$('txt').value=r.replace(/```/g,'').trim();$('undo').classList.remove('hide');$('auto').checked=false;persist();count();$('tagst').innerHTML='<span class="ok">تگ‌ها اضافه شد. مکث‌گذاری خودکار برای جلوگیری از تکرار خاموش شد.</span>';}
+ catch(e){$('tagst').innerHTML=`<span class="er">${e.message}</span>`;}$('aitag').disabled=false;};
+$('undo').onclick=()=>{$('txt').value=$('undo').dataset.prev||'';$('undo').classList.add('hide');persist();count();};
+function pauses(t){const P=' <short pause> ';
  return t.replace(/\r/g,'').replace(/([.!؟?۔])[ \t]+/g,(m,p)=>p+P+((p==='!'||p==='؟'||p==='?')&&studio==='story'?'<breath> ':'')).replace(/\n\s*\n/g,P+'<short pause>\n\n');}
 function chunks(t,max=1400){const out=[];let cur='';for(const s of t.split(/(?<=[.!؟?۔…]\s|\n)/)){if((cur+s).length>max&&cur){out.push(cur.trim());cur='';}cur+=s;}if(cur.trim())out.push(cur.trim());return out;}
-function style(){const c=$('custom').value.trim();return `Persian (Farsi/Dari), single narrator. ${STUDIOS[studio][1]} Tone: ${TONES[$('tone').value]}.${c?' '+c:''}`;}
+function style(tone){const c=$('custom').value.trim();return `Persian (Farsi/Dari), single narrator. ${STUDIOS[studio][1]} Tone: ${TONES[tone]}.${c?' '+c:''}`;}
 const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
-function toWav(pcm){const h=new DataView(new ArrayBuffer(44)),w=(o,s)=>[...s].forEach((c,i)=>h.setUint8(o+i,c.charCodeAt(0)));
- w(0,'RIFF');h.setUint32(4,36+pcm.length,true);w(8,'WAVEfmt ');h.setUint32(16,16,true);h.setUint16(20,1,true);h.setUint16(22,1,true);h.setUint32(24,24000,true);h.setUint32(28,48000,true);h.setUint16(32,2,true);h.setUint16(34,16,true);w(36,'data');h.setUint32(40,pcm.length,true);
+function toWav(pcm,sr=24000){const h=new DataView(new ArrayBuffer(44)),w=(o,s)=>[...s].forEach((c,i)=>h.setUint8(o+i,c.charCodeAt(0)));
+ w(0,'RIFF');h.setUint32(4,36+pcm.length,true);w(8,'WAVEfmt ');h.setUint32(16,16,true);h.setUint16(20,1,true);h.setUint16(22,1,true);h.setUint32(24,sr,true);h.setUint32(28,sr*2,true);h.setUint16(32,2,true);h.setUint16(34,16,true);w(36,'data');h.setUint32(40,pcm.length,true);
  return new Blob([h.buffer,pcm],{type:'audio/wav'});}
-async function call(text,sig){const key=localStorage.getItem('hk_key')||'';if(!key)throw new Error(ERR.no_key);
- let r;try{r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash-tts:generateContent',{method:'POST',signal:sig,headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({contents:[{role:'user',parts:[{text,speech_metadata:{style:style()}}]}],generationConfig:{responseModalities:['AUDIO'],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:$('voice').value}}}}})})}catch(e){if(e.name==='AbortError')throw e;throw new Error(ERR.network)}
+async function call(text,sig,voice,tone,retry){const key=KEY();
+ let r;try{r=await fetch(API+'gemini-3.8-flash-tts:generateContent',{method:'POST',signal:sig,headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({contents:[{role:'user',parts:[{text,speech_metadata:{style:style(tone)}}]}],generationConfig:{temperature:+$('temp').value,responseModalities:['AUDIO'],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:voice}}}}})})}catch(e){if(e.name==='AbortError')throw e;throw new Error(ERR.network)}
  const j=await r.json().catch(()=>({}));
- if(!r.ok){const m=(j.error&&j.error.message)||'';throw new Error(r.status===429?ERR.quota:(r.status===403||r.status===401||/API key/i.test(m))?ERR.bad_key:ERR.api_error+(m?' ('+m.slice(0,120)+')':''));}
+ if(!r.ok){if(r.status===400&&!VOICES[voice]&&!retry){msg(`صدای ${voice} توسط API پذیرفته نشد؛ با Kore ادامه می‌دهم.`);return call(text,sig,'Kore',tone,true);}throw new Error(errOf(r.status,(j.error&&j.error.message)||''));}
  const p=j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts;const a=p&&p.find(x=>x.inlineData);if(!a)throw new Error(ERR.no_audio);return b64(a.inlineData.data);}
+// split script into units: one per speaker run
+function units(t){const mv=$('voice').value,mt=$('tone').value,u=[];
+ for(const line of t.split('\n')){const fm=line.trim().match(/^\{(.+)\}$/);if(fm){u.push({fx:fm[1]});continue;}if(!line.trim()){if(u.length&&u[u.length-1].t!==undefined)u[u.length-1].t+='\n';continue;}
+  const m=line.match(/^\s*([^:：\n]{1,24})[:：]\s*(.*)$/),c=m&&cast.find(x=>x.n.trim()&&x.n.trim()===m[1].trim());
+  const v=c?c.v:mv,tn=c?c.t:mt,tx=c?m[2]:(m&&/^(راوی|narrator)$/i.test(m[1].trim())?m[2]:line),L=u[u.length-1];
+  if(L&&L.v===v&&L.tn===tn)L.t+='\n'+tx;else u.push({v,tn,t:tx});}
+ return u.filter(x=>x.fx||x.t.trim());}
 async function gen(trial){let t=$('txt').value.trim();if(!t)return msg('ابتدا متن را وارد کنید.','er');
- if($('auto').checked)t=pauses(t);let parts=chunks(t);if(trial)parts=[parts[0].slice(0,180)];
+ let us=units(t);if($('auto').checked)us.forEach(x=>{if(x.t)x.t=pauses(x.t)});
+ let jobs=[];us.forEach((x,ui)=>x.fx?jobs.push({...x,ui}):chunks(x.t).forEach(c=>jobs.push({...x,t:c,ui})));if(trial){const j=jobs.find(x=>!x.fx);jobs=[{...j,t:j.t.slice(0,180)}];}
  ctl=new AbortController();$('cancel').classList.remove('hide');$('go').disabled=$('trial').disabled=true;$('out').classList.add('hide');$('pr').style.width='0';
- const pcms=[];try{for(let i=0;i<parts.length;i++){msg(`در حال تولید بخش ${i+1} از ${parts.length}...`);pcms.push(await call(parts[i],ctl.signal));$('pr').style.width=((i+1)/parts.length*100)+'%';}
+ const pcms=[],fxe=[];try{for(let i=0;i<jobs.length;i++){msg(`در حال تولید بخش ${i+1} از ${jobs.length}...`);
+   if(i&&jobs[i].ui!==jobs[i-1].ui)pcms.push(new Uint8Array(16800));
+   if(jobs[i].fx)fxe.push({n:jobs[i].fx,at:pcms.reduce((a,p)=>a+p.length,0)/48000});else pcms.push(await call(jobs[i].t,ctl.signal,jobs[i].v,jobs[i].tn));$('pr').style.width=((i+1)/jobs.length*100)+'%';}
   const n=pcms.reduce((a,p)=>a+p.length,0),all=new Uint8Array(n);let o=0;pcms.forEach(p=>{all.set(p,o);o+=p.length;});
-  wav=toWav(all);$('au').src=URL.createObjectURL(wav);$('au').playbackRate=speed;$('out').classList.remove('hide');$('dur').textContent='مدت: '+(n/48000).toFixed(1)+' ثانیه';msg('صدا با موفقیت از Gemini دریافت شد.','ok');}
+  let aud=all,sr=24000;if($('bed').value||fxe.length){msg('در حال ترکیب موسیقی و افکت...');aud=await mix(all,fxe);sr=44100;}wav=toWav(aud,sr);peaks=pk(aud,0);$('au').src=URL.createObjectURL(wav);$('au').playbackRate=speed;$('out').classList.remove('hide');$('dur').textContent='مدت: '+(aud.length/(sr*2)).toFixed(1)+' ثانیه';msg('صدا با موفقیت از Gemini دریافت شد.','ok');}
  catch(e){msg(e.name==='AbortError'?'تولید لغو شد.':e.message,'er');}
  $('cancel').classList.add('hide');$('go').disabled=$('trial').disabled=false;}
 $('go').onclick=()=>gen(false);$('trial').onclick=()=>gen(true);$('cancel').onclick=()=>ctl&&ctl.abort();
 $('dl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(wav);a.download=($('fname').value||'Hikayat-Studio')+'.wav';a.click();};
+// storage (permanent audio + own music)
+const idb=()=>new Promise((res,rej)=>{const r=indexedDB.open('hk',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>res(r.result);r.onerror=rej;});
+const idbSet=async(k,v)=>{const d=await idb();return new Promise(r=>{const t=d.transaction('f','readwrite');t.objectStore('f').put(v,k);t.oncomplete=()=>r();});};
+const idbGet=async k=>{const d=await idb();return new Promise(r=>{const q=d.transaction('f').objectStore('f').get(k);q.onsuccess=()=>r(q.result);q.onerror=()=>r();});};
+const idbDel=async k=>{const d=await idb();d.transaction('f','readwrite').objectStore('f').delete(k);};
+window.playP=async i=>{const x=P()[i],b=x&&await idbGet('a'+x.id);if(!b)return alert('صدایی برای این پروژه ذخیره نشده است.');wav=b;peaks=pk(new Uint8Array(await b.arrayBuffer()),44);$('au').src=URL.createObjectURL(b);$('out').classList.remove('hide');document.querySelector('[data-v=studio]').click();};
+navigator.storage&&navigator.storage.persist&&navigator.storage.persist();
+// music + effects (synthesized in-app)
+const FX={رعد:'رعد',در:'در',قدم:'قدم‌ها',قلب:'ضربان قلب',ناقوس:'ناقوس',شیشه:'شیشه',ترس:'ضربهٔ ترسناک'},BEDT={horror:'horror',emo:'emo',night:'calm',mys:'horror',rom:'emo',epic:'epic'};
+$('fxb').innerHTML=Object.entries(FX).map(([k,v])=>`<button class="sm" data-ins="\\n{${k}}\\n">${v}</button>`).join('');
+$('bed').value=S.bed||'';$('auto').checked=!!S.auto;$('auto').addEventListener('change',persist);$('temp').value=S.temp||1;const td=()=>{const v=+$('temp').value;$('tv').textContent=v;$('tdesc').textContent=v<=.5?'لحن بسیار باثبات و رسمی (مناسب اخبار و آموزش)':v<=1.2?'لحن طبیعی، زنده و متعادل (مناسب قصه و پادکست)':'لحن پرشور، دراماتیک و خلاقانه (بازی حسی بیشتر)';};td();$('temp').addEventListener('input',()=>{td();persist();});$('bvol').value=S.bv||35;$('fvol').value=S.fv||60;
+['bed','bvol','fvol'].forEach(i=>$(i).addEventListener('input',persist));
+$('mup').onclick=()=>$('mf').click();$('mf').onchange=async e=>{const f=e.target.files[0];if(!f)return;await idbSet('music',f);$('bed').value='mine';$('mname').textContent=f.name;persist();};
+idbGet('music').then(f=>f&&($('mname').textContent=f.name));
+const nz=(c,t0=0,d)=>{const b=c.createBuffer(1,c.sampleRate*2,c.sampleRate),x=b.getChannelData(0);for(let i=0;i<x.length;i++)x[i]=Math.random()*2-1;const s=c.createBufferSource();s.buffer=b;s.loop=true;s.start(t0);if(d)s.stop(t0+d);return s;};
+const fl=(c,t,f,q=1)=>{const x=c.createBiquadFilter();x.type=t;x.frequency.value=f;x.Q.value=q;return x;};
+const ga=(c,v)=>{const g=c.createGain();g.gain.value=v;return g;};
+const oc=(c,t,f)=>{const o=c.createOscillator();o.type=t;o.frequency.value=f;o.start();return o;};
+const chain=(...n)=>n.reduce((a,b)=>(a.connect(b),b));
+async function bedSynth(c,k,out,T){
+ if(k==='rain')chain(nz(c),fl(c,'highpass',900),fl(c,'lowpass',9000),ga(c,.5),out);
+ else if(k==='wind'){const f=fl(c,'bandpass',450,1.2);chain(oc(c,'sine',.12),ga(c,250),f.frequency);chain(nz(c),f,ga(c,1.4),out);}
+ else if(k==='fire'){const g=ga(c,.4);chain(oc(c,'sawtooth',9),ga(c,.35),g.gain);chain(nz(c),fl(c,'lowpass',1800),g,out);}
+ else if(k==='hk'){const r=await fetch('music.mp3');if(!r.ok)throw new Error('فایل music.mp3 کنار index.html پیدا نشد.');const s=c.createBufferSource();s.buffer=await c.decodeAudioData(await r.arrayBuffer());s.loop=true;s.connect(out);s.start();}
+ else if(k==='mine'){const f=await idbGet('music');if(!f)return;const s=c.createBufferSource();s.buffer=await c.decodeAudioData(await f.arrayBuffer());s.loop=true;s.connect(out);s.start();}
+ else{const M={horror:{ch:[[55,58.3,82.4],[55,58.3,87.3]],L:8,t:'sawtooth',f:260},calm:{ch:[[110,220,261.6,329.6],[87.3,174.6,220,261.6],[98,196,246.9,293.7]],L:8,t:'sine',f:900},
+  emo:{ch:[[110,220,261.6,329.6],[87.3,174.6,220,261.6],[130.8,261.6,329.6,392],[98,196,246.9,293.7]],L:6,t:'triangle',f:1400},epic:{ch:[[73.4,110,146.8,220],[58.3,87.3,116.5,174.6],[65.4,98,130.8,196]],L:6,t:'sawtooth',f:700}}[k];
+  const lp=fl(c,'lowpass',M.f);chain(lp,ga(c,.22),out);
+  const os=[0,1,2,3].map(j=>{const o=oc(c,M.t,M.ch[0][j%M.ch[0].length]);o.connect(lp);return o;});
+  for(let t=M.L,i=1;t<T;t+=M.L,i++){const ch=M.ch[i%M.ch.length];os.forEach((o,j)=>o.frequency.setTargetAtTime(ch[j%ch.length],t,.6));}
+  if(k==='epic'){const dr=ga(c,0);chain(oc(c,'sine',58),dr,out);for(let t=0;t<T;t+=1.2){dr.gain.setValueAtTime(.9,t);dr.gain.exponentialRampToValueAtTime(.001,t+.6);}}}}
+function sfx(c,n,t,v){const out=ga(c,v);out.connect(c.destination);
+ const eg=(t0,d,pk)=>{const g=c.createGain();g.gain.setValueAtTime(.0001,t0);g.gain.linearRampToValueAtTime(pk,t0+.02);g.gain.exponentialRampToValueAtTime(.001,t0+d);return g;};
+ const nb=(t0,ty,f,d,pk)=>chain(nz(c,t0,d+.1),fl(c,ty,f),eg(t0,d,pk),out);
+ const tn=(t0,f,d,pk,ty='sine')=>{const o=c.createOscillator();o.type=ty;o.frequency.value=f;chain(o,eg(t0,d,pk),out);o.start(t0);o.stop(t0+d+.1);};
+ const F={رعد:()=>{nb(t,'lowpass',180,3.5,3);nb(t+.4,'lowpass',90,3,3);},
+ در:()=>{const o=c.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(90,t);o.frequency.linearRampToValueAtTime(210,t+1.4);chain(o,fl(c,'lowpass',700),eg(t,1.5,.6),out);o.start(t);o.stop(t+1.6);},
+ قدم:()=>{for(let i=0;i<4;i++)nb(t+i*.5,'lowpass',350,.12,2);},
+ قلب:()=>{for(let i=0;i<4;i++){tn(t+i,55,.25,1.5);tn(t+i+.28,48,.25,1.1);}},
+ ناقوس:()=>[1,2.76,5.4].forEach((m,i)=>tn(t,220*m,5,.6/(i+1))),
+ شیشه:()=>{nb(t,'highpass',4000,.5,1.2);[3000,4200,5200].forEach((f,i)=>tn(t+.05*i,f,.6,.3));},
+ ترس:()=>{tn(t,45,1.5,2);nb(t,'lowpass',500,.6,1.5);}};
+ F[n]&&F[n]();}
+async function mix(pcm,fxe){const sr=44100,IN=3,OUT=4,nd=pcm.length/48000,T=IN+nd+OUT,c=new OfflineAudioContext(1,Math.ceil(T*sr),sr);
+ const dv=new DataView(pcm.buffer),nb=c.createBuffer(1,pcm.length/2,24000),d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=dv.getInt16(i*2,true)/32768;
+ const ns=c.createBufferSource();ns.buffer=nb;ns.connect(c.destination);ns.start(IN);
+ const bed=$('bed').value,bv=$('bvol').value/100;
+ if(bed){const g=c.createGain(),G=g.gain;g.connect(c.destination);G.setValueAtTime(0,0);G.linearRampToValueAtTime(bv,1.5);G.setValueAtTime(bv,IN-.5);G.linearRampToValueAtTime(bv*.3,IN+.5);G.setValueAtTime(bv*.3,IN+nd);G.linearRampToValueAtTime(bv,IN+nd+1);G.setValueAtTime(bv,T-2);G.linearRampToValueAtTime(0,T);await bedSynth(c,bed,g,T);}
+ fxe.forEach(f=>sfx(c,f.n,IN+f.at,$('fvol').value/100));
+ const o=(await c.startRendering()).getChannelData(0),out=new Uint8Array(o.length*2),ov=new DataView(out.buffer);
+ for(let i=0;i<o.length;i++)ov.setInt16(i*2,Math.max(-1,Math.min(1,o[i]))*32767,true);return out;}
+// waveform + voice preview
+let peaks=[];
+function pk(by,off){const n=(by.length-off)>>1,dv=new DataView(by.buffer,by.byteOffset+off,n*2),B=120,w=Math.max(1,Math.floor(n/B)),r=[];for(let b=0;b<B;b++){let m=0;for(let i=b*w;i<Math.min(n,(b+1)*w);i+=12)m=Math.max(m,Math.abs(dv.getInt16(i*2,true)));r.push(m/32768);}const mx=Math.max(...r,.01);return r.map(x=>x/mx);}
+function draw(){const c=$('wf'),W=c.width=c.clientWidth*(devicePixelRatio||1),H=c.height=c.clientHeight*(devicePixelRatio||1),x=c.getContext('2d'),p=$('au').duration?$('au').currentTime/$('au').duration:0,bw=W/peaks.length;
+ peaks.forEach((v,i)=>{x.fillStyle=i/peaks.length<p?'#f5b942':'#3a4263';const h=Math.max(3,v*H*.9);x.fillRect(i*bw+bw*.15,(H-h)/2,bw*.7,h);});}
+$('au').addEventListener('timeupdate',draw);$('au').addEventListener('loadedmetadata',draw);new ResizeObserver(draw).observe($('wf'));
+$('wf').onclick=e=>{const a=$('au');if(a.duration)a.currentTime=(e.offsetX/$('wf').clientWidth)*a.duration;};
+const VD=Object.assign({},...Object.values(VG));
+function vd(){$('vdesc').textContent=VD[$('voice').value]||'';}
+$('voice').addEventListener('input',vd);vd();
+$('vprev').onclick=async()=>{const b=$('vprev');b.disabled=true;msg('در حال ساخت پیش‌شنود...');try{const p=await call('سلام، من گوینده‌ی حکایت هستم. هر نوشته، یک صدای زنده.',null,$('voice').value,$('tone').value);new Audio(URL.createObjectURL(toWav(p))).play();msg('');}catch(e){msg(e.message,'er');}b.disabled=false;};
+// chat
+const SYS='تو دستیار حرفه‌ای نویسندگی برای یک کانال داستان‌سرای فارسی/دری هستی. داستان، ایدهٔ قسمت، عنوان و توضیح کانال و متن روایت می‌نویسی. وقتی متن برای روایت صوتی می‌خواهند، با قالب «راوی: ...» و «نام شخصیت: دیالوگ» و تگ‌های <short pause> <breath> <sigh> <laugh> بنویس. همیشه به فارسی پاسخ بده.';
+function rchat(){$('cbox').innerHTML=chat.map((m,i)=>`<div class="msg ${m.role}">${esc(m.parts[0].text)}${m.role==='model'?`<br><button class="sm" data-ts="${i}" style="margin-top:6px">ارسال به استودیو</button>`:''}</div>`).join('')||'<div class="hint">یکی از دکمه‌های بالا را بزنید یا پیام بنویسید.</div>';$('cbox').scrollTop=1e9;}
+async function send(){const t=$('cin').value.trim();if(!t)return;chat.push({role:'user',parts:[{text:t}]});$('cin').value='';rchat();$('cst').textContent='در حال نوشتن...';$('csend').disabled=true;
+ try{const r=await tg(chat.slice(-20),SYS);chat.push({role:'model',parts:[{text:r}]});$('cst').textContent='';}catch(e){$('cst').innerHTML=`<span class="er">${e.message}</span>`;}
+ localStorage.setItem('hk_chat',JSON.stringify(chat.slice(-40)));$('csend').disabled=false;rchat();}
+$('csend').onclick=send;$('cclr').onclick=()=>{chat=[];localStorage.removeItem('hk_chat');rchat();};
 // key page
 $('ak').value=localStorage.getItem('hk_key')||'';$('eye').onclick=()=>$('ak').type=$('ak').type==='password'?'text':'password';
 $('aks').onclick=()=>{localStorage.setItem('hk_key',$('ak').value.trim());$('aks2').innerHTML='<span class="ok">ذخیره شد.</span>';};
 $('akd').onclick=()=>{localStorage.removeItem('hk_key');$('ak').value='';$('aks2').textContent='کلید حذف شد.';};
-$('akt').onclick=async()=>{localStorage.setItem('hk_key',$('ak').value.trim());$('aks2').textContent='در حال آزمایش...';try{await call('سلام',null);$('aks2').innerHTML='<span class="ok">اتصال موفق بود.</span>';}catch(e){$('aks2').innerHTML=`<span class="er">${e.message}</span>`;}};
+$('akt').onclick=async()=>{localStorage.setItem('hk_key',$('ak').value.trim());$('aks2').textContent='در حال آزمایش...';try{await call('سلام',null,'Kore','طبیعی');$('aks2').innerHTML='<span class="ok">اتصال موفق بود.</span>';}catch(e){$('aks2').innerHTML=`<span class="er">${e.message}</span>`;}};
 // archive (text and settings only; audio is not stored)
 const P=()=>JSON.parse(localStorage.getItem('hk_p')||'[]');
-$('save').onclick=()=>{const n=prompt('نام پروژه:',$('fname').value);if(!n)return;const p=P();p.unshift({n,t:$('txt').value,v:$('voice').value,tone:$('tone').value,c:$('custom').value,s:studio});localStorage.setItem('hk_p',JSON.stringify(p));};
-function plist(){const p=P();$('plist').innerHTML=p.length?p.map((x,i)=>`<div class="proj"><span>${x.n}</span><button onclick="openP(${i})">باز کردن</button><button onclick="delP(${i})">حذف</button></div>`).join(''):'<small>پروژه‌ای ذخیره نشده است.</small>';}
-window.openP=i=>{const x=P()[i];$('txt').value=x.t;$('voice').value=x.v;$('tone').value=x.tone;$('custom').value=x.c;studio=x.s;persist();mark();count();document.querySelector('[data-v=studio]').click();};
-window.delP=i=>{const p=P();p.splice(i,1);localStorage.setItem('hk_p',JSON.stringify(p));plist();};
-mark();count();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
+$('save').onclick=()=>{const n=prompt('نام پروژه:',$('fname').value);if(!n)return;const p=P();const id=Date.now();if(wav)idbSet('a'+id,wav);p.unshift({id,n,t:$('txt').value,v:$('voice').value,tone:$('tone').value,c:$('custom').value,s:studio,cast});localStorage.setItem('hk_p',JSON.stringify(p));};
+function plist(){const p=P();$('plist').innerHTML=p.length?p.map((x,i)=>`<div class="proj"><span>${esc(x.n)}</span><button onclick="openP(${i})">باز کردن</button><button onclick="playP(${i})">صدا</button><button onclick="delP(${i})">حذف</button></div>`).join(''):'<small>پروژه‌ای ذخیره نشده است.</small>';}
+window.openP=i=>{const x=P()[i];$('txt').value=x.t;$('voice').value=x.v;$('tone').value=x.tone;$('custom').value=x.c;studio=x.s;if(x.cast){cast=x.cast;rc();}persist();mark();count();document.querySelector('[data-v=studio]').click();};
+window.delP=i=>{const p=P();idbDel('a'+p[i].id);p.splice(i,1);localStorage.setItem('hk_p',JSON.stringify(p));plist();};
+// backup
+$('bex').onclick=()=>{persist();const d={set:JSON.parse(localStorage.getItem('hk_set')||'{}'),txt:$('txt').value,p:P(),chat},a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(d)],{type:'application/json'}));a.download='hikayat-backup.json';a.click();};
+$('bim').onclick=()=>$('bf').click();
+$('bf').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());localStorage.setItem('hk_set',JSON.stringify(d.set||{}));localStorage.setItem('hk_txt',d.txt||'');localStorage.setItem('hk_p',JSON.stringify(d.p||[]));localStorage.setItem('hk_chat',JSON.stringify(d.chat||[]));$('bst').innerHTML='<span class="ok">بازیابی شد. صفحه دوباره بارگذاری می‌شود...</span>';setTimeout(()=>location.reload(),900);}catch(x){$('bst').innerHTML='<span class="er">فایل پشتیبان نامعتبر است.</span>';}};
+mark();count();rc();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
 </script></body></html>
